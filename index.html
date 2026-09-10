@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>レーシングプログラム - 試合時間</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+        }
+
+        body {
+            background-color: #0b2b18; /* 競馬場ターフ感のある濃い緑 */
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            padding: 15px;
+            background-image: radial-gradient(#144d2b 15%, transparent 16%);
+            background-size: 20px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: #111a14;
+            border: 3px solid #d4af37; /* ゴールドの枠線 */
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            overflow: hidden;
+        }
+
+        /* ヘッダー */
+        .header {
+            background: linear-gradient(135deg, #1b5e20, #0d3b13);
+            text-align: center;
+            padding: 15px 10px;
+            border-bottom: 2px solid #d4af37;
+        }
+
+        .header h1 {
+            font-size: 1.4rem;
+            color: #fff;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .header h1::before, .header h1::after {
+            content: "";
+            font-size: 1.2rem;
+        }
+
+        /* 日程切り替えタブ */
+        .tab-buttons {
+            display: flex;
+            background-color: #000;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            background-color: #222;
+            color: #888;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 3px solid #444;
+        }
+
+        .tab-btn.active {
+            background-color: #d4af37; /* 金色 */
+            color: #000;
+            border-bottom: 3px solid #fff;
+            text-shadow: 0 0 2px rgba(255,255,255,0.5);
+        }
+
+        /* スケジュールリスト */
+        .schedule-list {
+            display: none;
+            padding: 12px;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .schedule-list.active {
+            display: flex;
+        }
+
+        /* 各レースの枠カード */
+        .race-card {
+            display: flex;
+            align-items: center;
+            background: #1c2820;
+            border: 1px solid #2d4233;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        /* レース番号（枠色風アイコン） */
+        .race-num {
+            width: 75px;
+            padding: 12px 5px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.95rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            line-height: 1.1;
+        }
+
+        .race-num span {
+            font-size: 1.3rem;
+            font-weight: 900;
+        }
+
+        /* 枠色デザイン */
+        .waku-1 { background-color: #ffffff; color: #000; } /* 1枠: 白 */
+        .waku-2 { background-color: #222222; color: #fff; border-right: 1px solid #444; } /* 2枠: 黒 */
+        .waku-3 { background-color: #d32f2f; color: #fff; } /* 3枠: 赤 */
+        .waku-4 { background-color: #1976d2; color: #fff; } /* 4枠: 青 */
+        .waku-5 { background-color: #fbc02d; color: #000; } /* 5枠: 黄 */
+
+        /* 重賞・スペシャルレース特別演出 */
+        .race-card.special-g1 {
+            border: 2px solid #ffd700;
+            background: linear-gradient(135deg, #3a2500, #1c2820);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+        }
+
+        .race-card.special-g1 .race-num {
+            background: linear-gradient(135deg, #ffe066, #d4af37);
+            color: #000;
+            text-shadow: none;
+        }
+
+        /* 発走時刻エリア */
+        .race-info {
+            flex: 1;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .race-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .special-g1 .race-name {
+            color: #ffd700;
+            text-shadow: 0 0 5px rgba(255,215,0,0.5);
+        }
+
+        .time-label {
+            font-size: 0.75rem;
+            color: #aaa;
+            margin-bottom: 2px;
+            text-align: right;
+        }
+
+        .race-time {
+            font-size: 1.35rem;
+            font-weight: bold;
+            color: #00ff66; /* 電光掲示板風グリーン */
+            font-family: 'Courier New', Courier, monospace;
+            text-shadow: 0 0 8px rgba(0,255,102,0.6);
+        }
+
+        .special-g1 .race-time {
+            color: #ff3366;
+            text-shadow: 0 0 8px rgba(255,51,102,0.8);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>試合時間案内</h1>
+        </div>
+
+        <!-- 1日目 / 2日目 切替ボタン -->
+        <div class="tab-buttons">
+            <button class="tab-btn active" onclick="switchDay(1)">1日目</button>
+            <button class="tab-btn" onclick="switchDay(2)">2日目</button>
+        </div>
+
+        <!-- 1日目のプログラム -->
+        <div id="day1" class="schedule-list active">
+            <div class="race-card">
+                <div class="race-num waku-1"><span>1R</span>第一試合</div>
+                <div class="race-info">
+                    <div class="race-name">第一試合</div>
+                    <div>
+                        <div class="time-label">発走時間</div>
+                        <div class="race-time">10:50〜</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="race-card">
+                <div class="race-num waku-2"><span>2R</span>第二試合</div>
+                <div class="race-info">
+                    <div class="race-name">第二試合</div>
+                    <div>
+                        <div class="time-label">発走時間</div>
+                        <div class="race-time">12:20〜</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="race-card">
+                <div class="race-num waku-3"><span>3R</span>第三試合</div>
+                <div class="race-info">
+                    <div class="race-name">第三試合</div>
+                    <div>
+                        <div class="time-label">発走時間</div>
+                        <div class="race-time">13:20〜</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="race-card">
+                <div class="race-num waku-4"><span>4R</span>第四試合</div>
+                <div class="race-info">
+                    <div class="race-name">第四試合</div>
+                    <div>
+                        <div class="time-label">発走時間</div>
+                        <div class="race-time">14:20〜</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2日目のプログラム -->
+        <div id="day2" class="schedule-list">
+            <div class="race-card">
+                <div class="race-num waku-1"><span>1R</span>第一試合</div>
+                <div class="race-info">
+                    <div class="race-name">第一試合</div>
+                    <div>
+                        <div class="time-label">発走時間</div>
+                        <div class="race-time">10:20〜</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="race-card">
+                <div class="race-num waku-2"><span>2R</span>第二試合</div>
+                <div class="race-info">
+                    <div class="race-name">第二試合</div>
+                    <div>
+                        <div class="time-label">発走時間</div>
+                        <div class="race-time">11:20〜</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="race-card">
+                <div class="race-num waku-3"><span>3R</span>第三試合</div>
+                <div class="race-info">
+                    <div class="race-name">第三試合</div>
+                    <div>
+                        <div class="time-label">発走時間</div>
+                        <div class="race-time">12:20〜</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="race-card">
+                <div class="race-num waku-4"><span>4R</span>第四試合</div>
+                <div class="race-info">
+                    <div class="race-name">第四試合</div>
+                    <div>
+                        <div class="time-label">発走時間</div>
+                        <div class="race-time">13:20〜</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- メインのスペシャルレース（重賞風） -->
+            <div class="race-card special-g1">
+                <div class="race-num waku-5"><span>EX</span>Main</div>
+                <div class="race-info">
+                    <div class="race-name">スペシャルレース</div>
+                    <div>
+                        <div class="time-label" style="color:#ffd700;">発走予定</div>
+                        <div class="race-time">14:20〜</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchDay(day) {
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach((btn, index) => {
+                if (index === day - 1) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            const day1 = document.getElementById('day1');
+            const day2 = document.getElementById('day2');
+
+            if (day === 1) {
+                day1.classList.add('active');
+                day2.classList.remove('active');
+            } else {
+                day1.classList.remove('active');
+                day2.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
