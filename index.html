@@ -13,7 +13,7 @@
         }
 
         body {
-            background-color: #0b2b18; /* 競馬場ターフ感のある濃い緑 */
+            background-color: #0b2b18;
             color: #fff;
             display: flex;
             justify-content: center;
@@ -26,13 +26,38 @@
             width: 100%;
             max-width: 480px;
             background: #111a14;
-            border: 3px solid #d4af37; /* ゴールドの枠線 */
+            border: 3px solid #d4af37;
             border-radius: 8px;
             box-shadow: 0 0 20px rgba(0,0,0,0.8);
             overflow: hidden;
         }
 
-        /* ヘッダー */
+        /* アクセスカウンターエリア */
+        .access-counter {
+            background-color: #000;
+            padding: 6px 15px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #333;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        .counter-badge {
+            background: #222;
+            color: #00ff66;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            font-size: 0.95rem;
+            padding: 2px 8px;
+            border-radius: 3px;
+            border: 1px solid #00ff66;
+            letter-spacing: 2px;
+            text-shadow: 0 0 5px rgba(0,255,102,0.6);
+        }
+
         .header {
             background: linear-gradient(135deg, #1b5e20, #0d3b13);
             text-align: center;
@@ -51,12 +76,6 @@
             gap: 8px;
         }
 
-        .header h1::before, .header h1::after {
-            content: "";
-            font-size: 1.2rem;
-        }
-
-        /* 日程切り替えタブ */
         .tab-buttons {
             display: flex;
             background-color: #000;
@@ -76,13 +95,20 @@
         }
 
         .tab-btn.active {
-            background-color: #d4af37; /* 金色 */
+            background-color: #d4af37;
             color: #000;
             border-bottom: 3px solid #fff;
             text-shadow: 0 0 2px rgba(255,255,255,0.5);
         }
 
-        /* スケジュールリスト */
+        .tab-btn.disabled {
+            background-color: #1a1a1a;
+            color: #555;
+            cursor: not-allowed;
+            border-bottom: 3px solid #222;
+            text-decoration: line-through;
+        }
+
         .schedule-list {
             display: none;
             padding: 12px;
@@ -94,7 +120,23 @@
             display: flex;
         }
 
-        /* 各レースの枠カード */
+        .closed-box {
+            text-align: center;
+            padding: 40px 20px;
+            background: #161f18;
+            border: 1px dashed #444;
+            border-radius: 4px;
+            color: #aaa;
+        }
+
+        .closed-box p {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 8px;
+        }
+
+        /* レースカード（タップ可能） */
         .race-card {
             display: flex;
             align-items: center;
@@ -103,9 +145,16 @@
             border-radius: 4px;
             overflow: hidden;
             box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+            position: relative;
         }
 
-        /* レース番号（枠色風アイコン） */
+        .race-card:hover {
+            transform: scale(1.01);
+            border-color: #d4af37;
+        }
+
         .race-num {
             width: 75px;
             padding: 12px 5px;
@@ -124,14 +173,12 @@
             font-weight: 900;
         }
 
-        /* 枠色デザイン */
-        .waku-1 { background-color: #ffffff; color: #000; } /* 1枠: 白 */
-        .waku-2 { background-color: #222222; color: #fff; border-right: 1px solid #444; } /* 2枠: 黒 */
-        .waku-3 { background-color: #d32f2f; color: #fff; } /* 3枠: 赤 */
-        .waku-4 { background-color: #1976d2; color: #fff; } /* 4枠: 青 */
-        .waku-5 { background-color: #fbc02d; color: #000; } /* 5枠: 黄 */
+        .waku-1 { background-color: #ffffff; color: #000; }
+        .waku-2 { background-color: #222222; color: #fff; border-right: 1px solid #444; }
+        .waku-3 { background-color: #d32f2f; color: #fff; }
+        .waku-4 { background-color: #1976d2; color: #fff; }
+        .waku-5 { background-color: #fbc02d; color: #000; }
 
-        /* 重賞・スペシャルレース特別演出 */
         .race-card.special-g1 {
             border: 2px solid #ffd700;
             background: linear-gradient(135deg, #3a2500, #1c2820);
@@ -144,7 +191,6 @@
             text-shadow: none;
         }
 
-        /* 発走時刻エリア */
         .race-info {
             flex: 1;
             padding: 10px 15px;
@@ -174,7 +220,7 @@
         .race-time {
             font-size: 1.35rem;
             font-weight: bold;
-            color: #00ff66; /* 電光掲示板風グリーン */
+            color: #00ff66;
             font-family: 'Courier New', Courier, monospace;
             text-shadow: 0 0 8px rgba(0,255,102,0.6);
         }
@@ -183,71 +229,258 @@
             color: #ff3366;
             text-shadow: 0 0 8px rgba(255,51,102,0.8);
         }
+
+        /* フッター・コピーライト表示 */
+        .footer-copyright {
+            background-color: #000;
+            color: #888;
+            text-align: center;
+            padding: 10px;
+            font-size: 0.8rem;
+            border-top: 1px solid #2d4233;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- アニメ公式風 モーダルポップアップ --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(6px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            padding: 15px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: #111a14;
+            border: 2px solid #d4af37;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 440px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+            transform: scale(0.85);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #1b5e20, #0d3b13);
+            padding: 12px 15px;
+            border-bottom: 1px solid #d4af37;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.8rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-body {
+            padding: 15px;
+        }
+
+        /* 画像スライダー */
+        .slider-wrapper {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #3d5243;
+            background: #000;
+        }
+
+        .slider-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.3s ease;
+        }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            color: #ffd700;
+            border: 1px solid #d4af37;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            transition: background 0.2s;
+        }
+
+        .slider-btn:hover {
+            background: rgba(212, 175, 55, 0.8);
+            color: #000;
+        }
+
+        .slider-btn.prev { left: 8px; }
+        .slider-btn.next { right: 8px; }
+
+        /* ドットインジケーター */
+        .dots-container {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin: 10px 0;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #444;
+            transition: all 0.3s;
+        }
+
+        .dot.active {
+            background: #ffd700;
+            transform: scale(1.3);
+        }
+
+        /* ステータスエリア */
+        .status-card {
+            background: #18241b;
+            border: 1px solid #2d4233;
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 5px;
+        }
+
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+            padding-bottom: 6px;
+            margin-bottom: 10px;
+        }
+
+        .photo-title {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #00ff66;
+        }
+
+        .photo-count {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        /* パラメーターバー */
+        .stat-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .stat-row {
+            display: flex;
+            align-items: center;
+            font-size: 0.8rem;
+        }
+
+        .stat-label {
+            width: 70px;
+            color: #ccc;
+            font-weight: bold;
+        }
+
+        .stat-bar-bg {
+            flex: 1;
+            height: 10px;
+            background: #0d140f;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 0 10px;
+            border: 1px solid #333;
+        }
+
+        .stat-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #1b5e20, #00ff66);
+            width: 0%;
+            transition: width 0.4s ease;
+            border-radius: 5px;
+        }
+
+        .stat-val {
+            width: 35px;
+            text-align: right;
+            font-weight: bold;
+            color: #ffd700;
+            font-family: 'Courier New', Courier, monospace;
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
+        <!-- アクセスカウンター -->
+        <div class="access-counter">
+            <span>TOTAL ACCESS:</span>
+            <span id="access-count" class="counter-badge">000000</span>
+        </div>
+
         <div class="header">
             <h1>レース時間案内</h1>
         </div>
 
-        <!-- 1日目 / 2日目 切替ボタン -->
         <div class="tab-buttons">
-            <button class="tab-btn active" onclick="switchDay(1)">1日目</button>
-            <button class="tab-btn" onclick="switchDay(2)">2日目</button>
+            <button class="tab-btn disabled" disabled>1日目 (終了)</button>
+            <button class="tab-btn active" onclick="switchDay(2)">2日目</button>
         </div>
 
-        <!-- 1日目のプログラム -->
-        <div id="day1" class="schedule-list active">
-            <div class="race-card">
-                <div class="race-num waku-1"><span>1R</span></div>
-                <div class="race-info">
-                    <div class="race-name">第1レース</div>
-                    <div>
-                        <div class="time-label">発走時間</div>
-                        <div class="race-time">10:50〜</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="race-card">
-                <div class="race-num waku-2"><span>2R</span></div>
-                <div class="race-info">
-                    <div class="race-name">第2レース</div>
-                    <div>
-                        <div class="time-label">発走時間</div>
-                        <div class="race-time">12:20〜</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="race-card">
-                <div class="race-num waku-3"><span>3R</span></div>
-                <div class="race-info">
-                    <div class="race-name">第3レース</div>
-                    <div>
-                        <div class="time-label">発走時間</div>
-                        <div class="race-time">13:20〜</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="race-card">
-                <div class="race-num waku-4"><span>4R</span></div>
-                <div class="race-info">
-                    <div class="race-name">第4レース</div>
-                    <div>
-                        <div class="time-label">発走時間</div>
-                        <div class="race-time">14:20〜</div>
-                    </div>
-                </div>
+        <!-- 1日目（閉鎖） -->
+        <div id="day1" class="schedule-list">
+            <div class="closed-box">
+                <p>【 開催終了 】</p>
+                1日目の日程はすべて終了いたしました。
             </div>
         </div>
 
-        <!-- 2日目のプログラム -->
-        <div id="day2" class="schedule-list">
-            <div class="race-card">
+        <!-- 2日目（アクティブ） -->
+        <div id="day2" class="schedule-list active">
+            <!-- 1R -->
+            <div class="race-card" onclick="openRaceModal(0)">
                 <div class="race-num waku-1"><span>1R</span></div>
                 <div class="race-info">
                     <div class="race-name">第1レース</div>
@@ -258,7 +491,8 @@
                 </div>
             </div>
 
-            <div class="race-card">
+            <!-- 2R -->
+            <div class="race-card" onclick="openRaceModal(1)">
                 <div class="race-num waku-2"><span>2R</span></div>
                 <div class="race-info">
                     <div class="race-name">第2レース</div>
@@ -269,7 +503,8 @@
                 </div>
             </div>
 
-            <div class="race-card">
+            <!-- 3R -->
+            <div class="race-card" onclick="openRaceModal(2)">
                 <div class="race-num waku-3"><span>3R</span></div>
                 <div class="race-info">
                     <div class="race-name">第3レース</div>
@@ -280,7 +515,8 @@
                 </div>
             </div>
 
-            <div class="race-card">
+            <!-- 4R -->
+            <div class="race-card" onclick="openRaceModal(3)">
                 <div class="race-num waku-4"><span>4R</span></div>
                 <div class="race-info">
                     <div class="race-name">第4レース</div>
@@ -291,8 +527,8 @@
                 </div>
             </div>
 
-            <!-- メインのスペシャルレース（重賞風） -->
-            <div class="race-card special-g1">
+            <!-- EX Main Special -->
+            <div class="race-card special-g1" onclick="openRaceModal(4)">
                 <div class="race-num waku-5"><span>EX</span>Main</div>
                 <div class="race-info">
                     <div class="race-name">スペシャルレース</div>
@@ -303,28 +539,217 @@
                 </div>
             </div>
         </div>
+
+        <!-- コピーライト（一番下に配置） -->
+        <div class="footer-copyright">
+            &copy; 2026 船橋芝山高等学校 3-H
+        </div>
+    </div>
+
+    <!-- アニメ風 モーダルギャラリー（ステータス付き） -->
+    <div id="modal-overlay" class="modal-overlay" onclick="closeModal(event)">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div id="modal-title" class="modal-title">レース名</div>
+                <button class="modal-close" onclick="closeModal(event, true)">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- 画像スライダー -->
+                <div class="slider-wrapper">
+                    <button class="slider-btn prev" onclick="changeSlide(-1)">&#10094;</button>
+                    <img id="slider-img" class="slider-img" src="" alt="Race Photo">
+                    <button class="slider-btn next" onclick="changeSlide(1)">&#10095;</button>
+                </div>
+
+                <!-- ドット表示 -->
+                <div id="dots-container" class="dots-container"></div>
+
+                <!-- ステータスカード -->
+                <div class="status-card">
+                    <div class="status-header">
+                        <span id="photo-title" class="photo-title">写真タイトル</span>
+                        <span id="photo-count" class="photo-count">1 / 6</span>
+                    </div>
+
+                    <div class="stat-group">
+                        <div class="stat-row">
+                            <span class="stat-label">スピード</span>
+                            <div class="stat-bar-bg"><div id="bar-speed" class="stat-bar-fill"></div></div>
+                            <span id="val-speed" class="stat-val">0</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">スタミナ</span>
+                            <div class="stat-bar-bg"><div id="bar-stamina" class="stat-bar-fill"></div></div>
+                            <span id="val-stamina" class="stat-val">0</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">瞬発力</span>
+                            <div class="stat-bar-bg"><div id="bar-power" class="stat-bar-fill"></div></div>
+                            <span id="val-power" class="stat-val">0</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
 
     <script>
+        // 各レースの6枚の写真＆ステータスデータ
+        const raceData = [
+            // 1R
+            {
+                title: "第1レース (10:20〜)",
+                photos: [
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/010.png?raw=true", name: "ルカサンブラック", speed: 88, stamina: 70, power: 55 },
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/001.png?raw=true", name: "コチャチャンマル", speed: 72, stamina: 81, power: 62 },
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/003.png?raw=true", name: "ジャスティンバービー", speed: 84, stamina: 77, power: 68 },
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/013.png?raw=true", name: "ルカオナキ", speed: 78, stamina: 95, power: 73 },
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/009.png?raw=true", name: "ｽｲﾐﾝｸﾞﾌﾞｿｸｻﾗｳﾞﾚｯﾄﾞﾌﾞﾘﾀﾆｳﾞｧｻｼｱﾎﾟｶﾘﾌﾟｽｷﾝｸﾞ", speed: 75, stamina: 70, power: 85 },
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/014.png?raw=true", name: "バフンディー", speed: 65, stamina: 35, power: 95 }
+                ]
+            },
+            // 2R
+            {
+                title: "第2レース (11:20〜)",
+                photos: [
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/014.png?raw=true", name: "バフンディー", speed: 65, stamina: 35, power: 95 },
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/011.png?raw=true", name: "カルシウムブソク", speed: 78, stamina: 40, power: 80 },
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/006.png?raw=true", name: "タケウマ", speed: 77, stamina: 75, power: 89 },
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/015.png?raw=true", name: "イクミノヒカリ", speed: 74, stamina: 68, power: 82 },
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/012.png?raw=true", name: "メイヴァルキリー", speed: 82, stamina: 81, power: 70 },
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/002.png?raw=true", name: "セイヤアイランド", speed: 71, stamina: 69, power: 86 }
+                ]
+            },
+            // 3R
+            {
+                title: "第3レース (12:20〜)",
+                photos: [
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/010.png?raw=true", name: "ルカサンブラック", speed: 88, stamina: 70, power: 55 },
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/001.png?raw=true", name: "コチャチャンマル", speed: 72, stamina: 81, power: 62 },
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/004.png?raw=true", name: "イチョウエンドレス", speed: 85, stamina: 77, power: 71 },
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/013.png?raw=true", name: "ルカオナキ", speed: 78, stamina: 95, power: 73 },
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/009.png?raw=true", name: "ｽｲﾐﾝｸﾞﾌﾞｿｸｻﾗｳﾞﾚｯﾄﾞﾌﾞﾘﾀﾆｳﾞｧｻｼｱﾎﾟｶﾘﾌﾟｽｷﾝｸﾞ", speed: 75, stamina: 70, power: 85 },
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/014.png?raw=true", name: "バフンディー", speed: 65, stamina: 35, power: 95 }
+                ]
+            },
+            // 4R
+            {
+                title: "第4レース (13:20〜)",
+                photos: [
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/014.png?raw=true", name: "バフンディー", speed: 65, stamina: 35, power: 95 },
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/011.png?raw=true", name: "カルシウムブソク", speed: 78, stamina: 40, power: 80 },
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/006.png?raw=true", name: "タケウマ", speed: 77, stamina: 75, power: 89 },
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/015.png?raw=true", name: "イクミノヒカリ", speed: 74, stamina: 68, power: 82 },
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/012.png?raw=true", name: "メイヴァルキリー", speed: 82, stamina: 81, power: 70 },
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/002.png?raw=true", name: "セイヤアイランド", speed: 71, stamina: 69, power: 86 }
+                ]
+            },
+            // EX Main
+            {
+                title: "スペシャルレース (EX Main 14:20〜)",
+                photos: [
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/011.png?raw=true", name: "カルシウムブソク", speed: 78, stamina: 40, power: 80 },
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/002.png?raw=true", name: "セイヤアイランド", speed: 71, stamina: 69, power: 86 },
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/006.png?raw=true", name: "タケウマ", speed: 77, stamina: 75, power: 89 },
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/014.png?raw=true", name: "バフンディー", speed: 65, stamina: 35, power: 95 },
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/012.png?raw=true", name: "メイヴァルキリー", speed: 82, stamina: 81, power: 70 },
+                    { url: "https://github.com/hideyan1017/keiba/blob/main/hors/005.png?raw=true", name: "カンレキスギテルヨ〜ダ〜", speed: 92, stamina: 98, power: 25 }
+                ]
+            }
+        ];
+
+        let currentRaceIndex = 0;
+        let currentPhotoIndex = 0;
+
+        // --- アクセスカウント ---
+        (function updateCounter() {
+            let count = localStorage.getItem('race_page_access_count') || 0;
+            count = parseInt(count) + 1;
+            localStorage.setItem('race_page_access_count', count);
+            
+            const formattedCount = String(count).padStart(6, '0');
+            document.getElementById('access-count').innerText = formattedCount;
+        })();
+
+        // --- 日付切替 ---
         function switchDay(day) {
-            const buttons = document.querySelectorAll('.tab-btn');
-            buttons.forEach((btn, index) => {
-                if (index === day - 1) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
+            if (day !== 2) return;
+            document.getElementById('day1').classList.remove('active');
+            document.getElementById('day2').classList.add('active');
+        }
+
+        // --- モーダルオープン ---
+        function openRaceModal(raceIdx) {
+            currentRaceIndex = raceIdx;
+            currentPhotoIndex = 0;
+
+            const race = raceData[raceIdx];
+            document.getElementById('modal-title').innerText = race.title;
+
+            // ドットの生成
+            const dotsContainer = document.getElementById('dots-container');
+            dotsContainer.innerHTML = '';
+            race.photos.forEach((_, idx) => {
+                const dot = document.createElement('div');
+                dot.className = `dot ${idx === 0 ? 'active' : ''}`;
+                dotsContainer.appendChild(dot);
             });
 
-            const day1 = document.getElementById('day1');
-            const day2 = document.getElementById('day2');
+            updateSlideDisplay();
+            document.getElementById('modal-overlay').classList.add('active');
+        }
 
-            if (day === 1) {
-                day1.classList.add('active');
-                day2.classList.remove('active');
-            } else {
-                day1.classList.remove('active');
-                day2.classList.add('active');
+        // --- スライド切り替え ---
+        function changeSlide(direction) {
+            const photos = raceData[currentRaceIndex].photos;
+            currentPhotoIndex += direction;
+
+            if (currentPhotoIndex < 0) {
+                currentPhotoIndex = photos.length - 1;
+            } else if (currentPhotoIndex >= photos.length) {
+                currentPhotoIndex = 0;
+            }
+
+            updateSlideDisplay();
+        }
+
+        // --- スライド＆ステータス更新表示 ---
+        function updateSlideDisplay() {
+            const photo = raceData[currentRaceIndex].photos[currentPhotoIndex];
+
+            // 画像セット
+            document.getElementById('slider-img').src = photo.url;
+
+            // 写真情報
+            document.getElementById('photo-title').innerText = photo.name;
+            document.getElementById('photo-count').innerText = `${currentPhotoIndex + 1} / ${raceData[currentRaceIndex].photos.length}`;
+
+            // ステータス更新 (ゲージ幅 ＆ 数値)
+            document.getElementById('bar-speed').style.width = photo.speed + '%';
+            document.getElementById('val-speed').innerText = photo.speed;
+
+            document.getElementById('bar-stamina').style.width = photo.stamina + '%';
+            document.getElementById('val-stamina').innerText = photo.stamina;
+
+            document.getElementById('bar-power').style.width = photo.power + '%';
+            document.getElementById('val-power').innerText = photo.power;
+
+            // ドットのアクティブ状態更新
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, idx) => {
+                if (idx === currentPhotoIndex) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        // --- モーダルクローズ ---
+        function closeModal(event, isBtn = false) {
+            if (isBtn || event.target.id === 'modal-overlay') {
+                document.getElementById('modal-overlay').classList.remove('active');
             }
         }
     </script>
