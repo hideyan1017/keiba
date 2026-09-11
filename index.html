@@ -662,16 +662,37 @@
         let currentRaceIndex = 0;
         let currentPhotoIndex = 0;
 
-        // --- アクセスカウント ---
-        (function updateCounter() {
-            let count = localStorage.getItem('race_page_access_count') || 0;
-            count = parseInt(count) + 1;
-            localStorage.setItem('race_page_access_count', count);
-            
-            const formattedCount = String(count).padStart(6, '0');
-            document.getElementById('access-count').innerText = formattedCount;
-        })();
+        // --- アクセスカウント（改善版：Web APIを利用して全体のアクセス数をカウント） ---
+(async function updateCounter() {
+    const counterElement = document.getElementById('access-count');
+    
+    // ユニークなキー名（学校名やサイト識別子など）を設定します
+    // ※ 他のサイトと被らない一意の文字列にしてください
+    const namespace = "funabashi-shibayama-3h-keiba";
+    const key = "total_visits";
 
+    try {
+        // CountAPI を呼び出してカウントを +1 加算（Hit）する
+        const response = await fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`);
+        
+        if (!response.ok) throw new Error('API Request Failed');
+        
+        const data = await response.json();
+        const count = data.value;
+
+        // 6桁のゼロパディング表示 (例: 000042)
+        const formattedCount = String(count).padStart(6, '0');
+        counterElement.innerText = formattedCount;
+    } catch (error) {
+        console.error('アクセスカウンターの取得に失敗しました:', error);
+        
+        // エラー時（オフライン時など）はフォールバックとして localStorage を使用
+        let localCount = localStorage.getItem('race_page_access_count') || 0;
+        localCount = parseInt(localCount) + 1;
+        localStorage.setItem('race_page_access_count', localCount);
+        counterElement.innerText = String(localCount).padStart(6, '0');
+    }
+})();
         // --- 日付切替 ---
         function switchDay(day) {
             if (day !== 2) return;
